@@ -23,7 +23,7 @@ import random
 
 import yfinance as yf
 
-# User agents aleatorios para scrapear evitando detección:
+# Random user agents to avoid detection while scraping:
 
 def rand_user_agent():
 
@@ -43,7 +43,6 @@ def rand_user_agent():
 
 def yf_crawling(tickers=[]):
     
-    
     chromedriver_autoinstaller.install() 
     #Opciones driver para evitar detección.
     options = webdriver.ChromeOptions()
@@ -56,7 +55,7 @@ def yf_crawling(tickers=[]):
     driver = webdriver.Chrome(options=options) 
     driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})") 
 
-    # Función para tiempos de espera.
+    # Random sleep.
     def sleep(dur=''):
         if dur == 'long':
             time.sleep(np.random.uniform(low=5.12,high=8.324))
@@ -78,7 +77,7 @@ def yf_crawling(tickers=[]):
         driver.get(url)
         sleep('short')
         
-        # Aceptar cookies
+        # Accept cookies
         try: 
             driver.find_element(By.XPATH,'//*[@id="consent-page"]/div/div/div/form/div[2]/div[2]/button').click()
             sleep('short')
@@ -87,7 +86,7 @@ def yf_crawling(tickers=[]):
         except: pass
         sleep('short')
         
-        # Scroll para cargar html     
+        # Scroll to load html     
         [scroll_down() for x in range(35)]
 
         # Data extraction
@@ -108,7 +107,7 @@ def yf_crawling(tickers=[]):
     driver.close()
     return to_DF
         
-#Extracción artículo YF
+# Article extraction
 
 def yf_scraping(df=None):
 
@@ -149,7 +148,7 @@ def yf_scraping(df=None):
     return articles
 
 
-# TICKERS YF para análisis
+# YF tickers price 
 
 def precios(start=None,end=None,tickers=None):
 
@@ -168,7 +167,7 @@ def precios(start=None,end=None,tickers=None):
         yf_ticker.rename(columns={'Close':f'{ticker}'},inplace=True)      
         data = data.merge(yf_ticker)            
         
-    # Ffill para reemplazar valores del fin de semana en finanza tradicional
+    # Ffill to replace missing values from week end in trad finance
     data.ffill(inplace=True)
     data.bfill(inplace=True)
 
